@@ -27,7 +27,7 @@ class ApiUtil {
 //testing code
 // (async () => {
 //     const obj = new ApiUtil();
-//     const data = await obj.getRequest("http://35.200.185.69:8000/v1/autocomplete?query=");
+//     const data = await obj.getRequest(process.env.API_URL + "a");
 //     console.log("result:", data);
 // })();
 

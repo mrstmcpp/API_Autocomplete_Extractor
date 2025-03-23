@@ -1,7 +1,11 @@
+const dotenv = require("dotenv")
+dotenv.config()
+
+
 class RateLimiter{
     constructor() {
-        this.limit = 100; //100 requests at once
-        this.cooldowntime = 36000; //cooldown period obtained by testing
+        this.limit = process.env.API_REQ_LIMIT; //100 requests at once
+        this.cooldowntime = process.env.API_COOLDOWN_PERIOD; //cooldown period obtained by testing
     }
 
     async limiter(counter){
