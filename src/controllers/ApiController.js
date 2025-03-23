@@ -14,11 +14,11 @@ class ApiController {
             // console.log("check:", names.results);
 
             if (names && Array.isArray(names.results)) {
-                for (const name of names.results) {
+                for (const name of names.results) { //extrating each entry
                     result.add(name);
                 }
             } else {
-                console.error("Unexpected API response format:", names);
+                console.error("API error:", names);
             }
         }
 
