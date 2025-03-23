@@ -11,18 +11,18 @@ class ApiController {
         // const queries = ['a', 'b' , 'c' , 'd' , 'e' , 'f' , 'g' , 'h'];
         const queries = this.genQuery();
         const result = new Set();
-        let counter = 0;
+        // let counter = 0;
 
         for (const query of queries) {
             //for now implementing rate limitinng for 5 queries
             // for(let i = 0; i < 20; i++){
             // }
-            await RateLimiter.limiter(counter % 100 === 0);
-            counter = 0;
+            // await RateLimiter.limiter(counter % 100 === 0);
+            await RateLimiter.limiter();
 
             try{
                 const names = await this.controller.getHelper(query);
-                // console.log("check:", names.results);
+                // console.log(`check for ${query}:`, names.results);
                 if (names && Array.isArray(names.results)) {
                     for (const name of names.results) { //extrating each entry
                         result.add(name);
@@ -31,10 +31,11 @@ class ApiController {
                     console.error("API error:", names);
                 }
             }catch (e) {
-                console.error(`Request failed : ${counter} === ${e.message}`);
+                console.error(`Request failed : ${e.message}`);
             }
         }
         // console.log("Final res:", result);
+        console.log(result.size);
         return Array.from(result);
     }
 

@@ -1,9 +1,10 @@
+//not in use... made for testing nd debugging
 const axios = require("axios");
 const dotenv = require("dotenv");
 
 dotenv.config();
 
-const COOLDOWN_PERIOD = 1000; //checking second by second
+const COOLDOWN_PERIOD = 60000; //checking second by second
 
 
 async function rateLim() { //to know about rate limmitng of the API
@@ -14,7 +15,7 @@ async function rateLim() { //to know about rate limmitng of the API
             count++;
             console.log("Success : " , count  , res.status);
         } catch (e) {
-            console.error("Error : " , count ,e.response.status);  // got 429 at 101th request
+            console.error("Error : " , count ,e.response.status , e.data);  // got 429 at 101th request
             //getting details about coolddown period
 
             if(e.response && e.response.status === 429){
