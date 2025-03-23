@@ -13,7 +13,10 @@ class ApiController {
     }
 
     async extract() {
-        const queries = [..."abcdefghijklmnopqrstuvwxyz"];
+        let queries = [..."abcdefghijklmnopqrstuvwxyz"];
+        const cache = new Map();
+        const minWords = 5;
+        const result = new Set();
 
         for (const c1 of "abcdefghijklmnopqrstuvwxyz") {
             for (const c2 of "abcdefghijklmnopqrstuvwxyz") {
@@ -28,16 +31,13 @@ class ApiController {
                 }
             }
         }
-        const cache = new Set();
-        const result = new Set();
 
         while (queries.length) {
             const batch = queries.splice(0, this.maxParallelReq);
             console.log(`batch: ${batch.join(", ")}`);
             await Promise.all(
                 batch.map(async (prefix) => {
-                    if (cache.has(prefix)) return;
-                    cache.add(prefix);
+                    if (prefix.length > 3 || cache.get(prefix)) return;
 
                     await RateLimiter.limiter(result.size);
 
@@ -46,17 +46,21 @@ class ApiController {
                         const names = await this.controller.getHelper(prefix);
                         // console.log(`check for ${query}:`, names.results);
                         if (names && Array.isArray(names.results) && names.results.length > 0) {
-
+                            let newWords = 0;
+                            cache.set(prefix, names.results);
                             names.results.forEach((name) => {
                                 if(!result.has(name)){
                                     result.add(name);
+                                    newWords++;
                                     this.totalResults++;
                                 }
                             });
 
-
-
                             fs.writeFileSync("results.json", JSON.stringify([...result], null, 2));
+
+                            if (newWords >= minWords && !queries.includes(prefix) && prefix.length < 3) {
+                                queries.push(prefix);
+                            }
                         }
                     } catch (e) {
                         console.error(`Request failed : ${e.message}`);

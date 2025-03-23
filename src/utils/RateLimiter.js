@@ -12,12 +12,13 @@ class RateLimiter{
         this.counter = 0;
     }
 
-    async limiter(){
+    async limiter(resultSize){
         this.counter++;
         // console.log(`Request Count: ${this.counter}/${lim}`);
 
         if(this.counter >= this.limit){
             console.log(`Rate Limit reached! Please Wait... ${this.cooldowntime / 1000} seconds`)
+            console.log(`📊 Current result size: ${resultSize} words`);
             await new Promise(resolve => setTimeout(resolve , this.cooldowntime)); //sending reqs again
             console.log("Resuming...")
             this.counter = 0;
