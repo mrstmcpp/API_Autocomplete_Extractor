@@ -5,63 +5,43 @@ const RateLimiter = require("../utils/RateLimiter");
 class ApiController {
     constructor() {
         this.controller = new ApiService();
+        this.maxParallelReq = 5;
     }
 
     async extract() {
-        // const queries = ['a', 'b' , 'c' , 'd' , 'e' , 'f' , 'g' , 'h'];
-        const queries = this.genQuery();
+        let queries = [..."abcdefghijklmnopqrstuvwxyz"];
         const result = new Set();
-        // let counter = 0;
 
-        for (const query of queries) {
-            //for now implementing rate limitinng for 5 queries
-            // for(let i = 0; i < 20; i++){
-            // }
-            // await RateLimiter.limiter(counter % 100 === 0);
-            await RateLimiter.limiter();
 
-            try{
-                const names = await this.controller.getHelper(query);
-                // console.log(`check for ${query}:`, names.results);
-                if (names && Array.isArray(names.results)) {
-                    for (const name of names.results) { //extrating each entry
-                        result.add(name);
+        while (queries.length) {
+            const batch = queries.splice(0, this.maxParallelReq);
+            console.log(`batch: ${batch.join(", ")}`);
+            await Promise.all(
+                batch.map(async (prefix) => {
+                    if (prefix.length > 3) return;
+
+                    await RateLimiter.limiter();
+
+                    try {
+                        const names = await this.controller.getHelper(prefix);
+                        // console.log(`check for ${query}:`, names.results);
+                        if (names && Array.isArray(names.results) && names.results.length > 0) {
+                            names.results.forEach((name) => result.add(name));
+                            if (!queries.includes(prefix) && prefix.length < 3) {
+                                queries.push(prefix);
+                            }
+                        }
+                    } catch (e) {
+                        console.error(`Request failed : ${e.message}`);
                     }
-                } else {
-                    console.error("API error:", names);
-                }
-            }catch (e) {
-                console.error(`Request failed : ${e.message}`);
-            }
+                })
+            )
         }
         // console.log("Final res:", result);
         console.log(result.size);
         return Array.from(result);
     }
 
-    genQuery(){
-        const words = "abcdefghijklmnopqrstuvwxyz";
-        const queries = [];
-
-        for(const w1 of words){
-            queries.push(w1);
-        }
-
-        for(const w1 of words){
-            for(const w2 of words){
-                queries.push(w1 + w2);
-            }
-        }
-
-        for(const w1 of words){
-            for(const w2 of words){
-                for(const w3 of words){
-                    queries.push(w1 + w2 + w3);
-                }
-            }
-        }
-        return queries;
-    }
 }
 
 

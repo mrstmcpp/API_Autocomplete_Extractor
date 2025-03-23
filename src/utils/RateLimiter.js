@@ -19,6 +19,7 @@ class RateLimiter{
         if(this.counter >= this.limit){
             console.log(`Rate Limit reached! Please Wait... ${this.cooldowntime / 1000} seconds`)
             await new Promise(resolve => setTimeout(resolve , this.cooldowntime)); //sending reqs again
+            console.log("Resuming...")
             this.counter = 0;
         }
     }
