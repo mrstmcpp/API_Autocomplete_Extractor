@@ -1,4 +1,6 @@
 const ApiService = require("../services/ApiService");
+const RateLimiter = require("../utils/RateLimiter");
+
 
 class ApiController {
     constructor() {
@@ -6,19 +8,30 @@ class ApiController {
     }
 
     async extract() {
-        const queries = ['a', 'b'];
+        const queries = ['a', 'b' , 'c' , 'd' , 'e'];
         const result = new Set();
+        let counter = 0;
 
         for (const query of queries) {
-            const names = await this.controller.getHelper(query);
-            // console.log("check:", names.results);
+            //for now implementing rate limitinng for 5 queries
+            for(let i = 0; i < 20 ; i++){
+                await RateLimiter.limiter(counter);
+            }
 
-            if (names && Array.isArray(names.results)) {
-                for (const name of names.results) { //extrating each entry
-                    result.add(name);
+            try{
+                const names = await this.controller.getHelper(query);
+                // console.log("check:", names.results);
+
+                if (names && Array.isArray(names.results)) {
+                    for (const name of names.results) { //extrating each entry
+                        result.add(name);
+                    }
+                } else {
+                    console.error("API error:", names);
                 }
-            } else {
-                console.error("API error:", names);
+
+            }catch (e) {
+                console.error(`Request failed : ${counter} === ${e.message}`);
             }
         }
 
