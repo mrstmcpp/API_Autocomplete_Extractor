@@ -40,7 +40,7 @@ autocomplete-extractor/
 │── package.json              # Project dependencies & scripts
 │── README.md                 # Documentation for setup & usage
 │── .env                      # Stores API settings (rate limits, cooldown time)
-
+```
 
 ## How to run
 ### Follow the Steps
@@ -48,11 +48,14 @@ autocomplete-extractor/
 ```sh
 # Install dependencies
 npm install
-
-# Create a .env file and configure environment variables
+```
+```sh
+### Create a .env file and configure environment variables
 API_URL=http://your-api-url/v1/autocomplete?query=
 API_REQ_LIMIT=100
 API_COOLDOWN_PERIOD=60000  # 60 seconds
-
-# Run the script
+```
+```sh
+### Run the script
 node app.js
+```
