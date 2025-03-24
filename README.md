@@ -22,7 +22,7 @@ To efficiently extract all words, we used **query expansion, parallel requests, 
 - Cached API Responses.
 
 ## Project Structure
-
+```
 autocomplete-extractor/
 │── /src
 │   │
