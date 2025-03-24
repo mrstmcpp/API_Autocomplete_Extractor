@@ -23,10 +23,27 @@ To efficiently extract all words, we used **query expansion, parallel requests, 
 
 ## Project Structure
 
-autocomplete-extractor/ │── /src │ ├── app.js # Main entry point to start extraction │ │ │ ├── /controllers # Controllers manage high-level business logic │ │ ├── ApiController.js # Handles query expansion & manages workflow │ │ │ ├── /services # Services handle specific business logic │ │ ├── ApiService.js # Manages API interactions & error handling │ │ │ ├── /utils # Utility functions for support tasks │ │ ├── RateLimiter.js # Controls API request limits & cooldowns │ │ ├── ApiUtil.js # API calling algorithms │── package.json # Project dependencies & scripts │── README.md # Documentation for setup & usage │── .env # Stores API settings (rate limits, cooldown time)
+autocomplete-extractor/
+│── /src
+│   │
+│   ├── /controllers          # Handles high-level logic & query expansion
+│   │   ├── ApiController.js  # Manages extraction workflow & API interactions
+│   │
+│   ├── /services             # Handles business logic & API communication
+│   │   ├── ApiService.js     # Sends requests to API, handles responses & retries
+│   │
+│   ├── /utils                # Utility functions for support tasks
+│   │   ├── RateLimiter.js    # Implements rate limiting & cooldown handling
+│   │   ├── ApiUtil.js        # Api get requests calling helper
+│   │
+├── app.js              # Main entry point to start extraction
+│── package.json              # Project dependencies & scripts
+│── README.md                 # Documentation for setup & usage
+│── .env                      # Stores API settings (rate limits, cooldown time)
+
 
 ## How to run
-### **1️⃣ Install Dependencies**
+### **Follow the steps**
 ```sh
 npm install
 
