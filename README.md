@@ -44,18 +44,17 @@ autocomplete-extractor/
 
 ## How to run
 ### Follow the Steps
-
+### Install dependencies
 ```sh
-# Install dependencies
 npm install
 ```
-```sh
 ### Create a .env file and configure environment variables
+```sh
 API_URL=http://your-api-url/v1/autocomplete?query=
 API_REQ_LIMIT=100
 API_COOLDOWN_PERIOD=60000  # 60 seconds
 ```
-```sh
 ### Run the script
+```sh
 node app.js
 ```
